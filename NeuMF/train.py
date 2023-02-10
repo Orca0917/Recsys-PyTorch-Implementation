@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 
-from model.GMF import GMFEngine
-from model.MLP import MLPEngine
-from model.NeuMF import NeuMFEngine
-from data.dataset import SampleGenerator
+from GMF import GMFEngine
+from MLP import MLPEngine
+from NeuMF import NeuMFEngine
+from dataset import SampleGenerator
 
 
 gmf_config = {
@@ -44,7 +44,7 @@ mlp_config = {
     "layers": [16, 64, 32, 16, 8],
     "l2_regularization": 0.0000001,  # MLP model is sensitive to hyper params
     "use_cuda": True,
-    "device_id": 7,
+    "device_id": 0,
     "pretrain": True,
     "pretrain_mf": "checkpoints/{}".format("gmf_factor8neg4_Epoch100_HR0.6391_NDCG0.2852.model"),
     "model_dir": "checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model",
@@ -65,8 +65,8 @@ neumf_config = {
     "layers": [16, 32, 16, 8],
     "l2_regularization": 0.01,
     "use_cuda": True,
-    "device_id": 7,
-    "pretrain": True,
+    "device_id": 0,
+    "pretrain": False,
     "pretrain_mf": "checkpoints/{}".format("gmf_factor8neg4_Epoch100_HR0.6391_NDCG0.2852.model"),
     "pretrain_mlp": "checkpoints/{}".format("mlp_factor8neg4_Epoch100_HR0.5606_NDCG0.2463.model"),
     "model_dir": "checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model",
@@ -107,5 +107,5 @@ for epoch in range(config["num_epoch"]):
         config["num_negative"], config["batch_size"]
     )
     engine.train_an_epoch(train_loader, epoch_id=epoch)
-    hit_ratio, ndcg = engine.evaluate(evaluate_data, epoch=epoch)
+    hit_ratio, ndcg = engine.evaluate(evaluate_data, epoch_id=epoch)
     engine.save(config["alias"], epoch, hit_ratio, ndcg)

@@ -1,13 +1,13 @@
 import torch
 
-from utils.util import save_checkpoint, use_optimizer
-from utils.metric import MetronAtk
+from util import save_checkpoint, use_optimizer
+from metrics import MetronAtK
 
 
 class Engine(object):
     def __init__(self, config):
         self.config = config
-        self._metron = MetronAtk(top_k=10)
+        self._metron = MetronAtK(top_k=10)
         self.opt = use_optimizer(self.model, config)
         self.crit = torch.nn.BCELoss()
 
