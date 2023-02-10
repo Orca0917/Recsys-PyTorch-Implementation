@@ -53,16 +53,16 @@ mlp_config = {
 neumf_config = {
     "alias": "pretrain_neumf_factor8neg4",
     "num_epoch": 200,
-    "batch_size": 1024,
+    "batch_size": 256,
     "optimizer": "adam",
     "adam_lr": 1e-3,
     "num_users": 610,
     "num_items": 9724,
     "latent_dim_mf": 8,
     "latent_dim_mlp": 8,
-    "num_negative": 4,
+    "num_negative": 10,
     # layers[0] is the concat of latent user vector & latent item vector
-    "layers": [16, 32, 16, 8],
+    "layers": [16, 64, 32, 16, 8],
     "l2_regularization": 0.01,
     "use_cuda": True,
     "device_id": 0,
@@ -78,7 +78,7 @@ ml1m_rating = pd.read_csv(
     ml1m_dir, sep=",", header=None, names=["uid", "mid", "rating", "timestamp"], engine="python"
 )
 
-# 데이터 인덱스 재설정
+# 데이터 인덱스 재설정,
 user_id = ml1m_rating[["uid"]].drop_duplicates().reindex()
 user_id["userId"] = np.arange(len(user_id))
 ml1m_rating = pd.merge(ml1m_rating, user_id, on=["uid"], how="left")

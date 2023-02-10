@@ -34,15 +34,16 @@ class SampleGenerator(object):
 
     def _binarize(self, ratings: pd.DataFrame):
         ratings = deepcopy(ratings)
-        ratings["rating"][ratings["rating"] > 0] = 1.0
+        ratings["rating"][ratings["rating"] < 3.0] = 0.0
+        ratings["rating"][ratings["rating"] >= 3.0] = 1.0
         return ratings
 
     def _split_loo(self, ratings):
         ratings["rank_latest"] = ratings.groupby(["userId"])["timestamp"].rank(
             method="first", ascending=False
         )
-        test = ratings[ratings["rank_latest"] == 1]
-        train = ratings[ratings["rank_latest"] > 1]
+        test = ratings[ratings["rank_latest"] == 1] # 가장 최근에 상호작용한 아이템
+        train = ratings[ratings["rank_latest"] > 1] # 그 이외의 아이템들
         return train[["userId", "itemId", "rating"]], test[["userId", "itemId", "rating"]]
 
     def _sample_negative(self, ratings):
@@ -52,10 +53,10 @@ class SampleGenerator(object):
             .reset_index()
             .rename(columns={"itemId": "interacted_items"})
         )
-        interact_status["negative_items"] = interact_status["interacted_items"].apply(
+        interact_status["negative_items"] = interact_status["interacted_items"].apply( # 전체 아이템 - 상호작용한 아이템
             lambda x: self.item_pool - x
         )
-        interact_status["negative_samples"] = interact_status["negative_items"].apply(
+        interact_status["negative_samples"] = interact_status["negative_items"].apply( # negative items 중 99개 샘플링
             lambda x: random.sample(x, 99)
         )
         return interact_status[["userId", "negative_items", "negative_samples"]]
