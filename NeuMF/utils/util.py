@@ -1,12 +1,40 @@
 import torch
-import numpy as np
-from random import random
 
-def seed_everything(seed):
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    np.random.seed(seed)
-    random.seed(seed)
+
+def save_checkpoint(model, model_dir):
+    torch.save(model.state_dict(), model_dir)
+
+
+def resume_checkpoint(model, model_dir, device_id):
+    state_dict = torch.load(
+        model_dir, map_location=lambda storage, loc: storage.cuda(device=device_id)
+    )
+    model.load_state_dict(state_dict)
+
+
+def use_cuda(enabled, device_id=0):
+    if enabled:
+        torch.cuda.set_device(device_id)
+
+
+def use_optimizer(network, params):
+    if params["optimizer"] == "sgd":
+        optimizer = torch.optim.SGD(
+            network.parameters(),
+            lr=params["sgd_lr"],
+            momentum=params["sgd_momentum"],
+            weight_decay=params["l2_regularization"],
+        )
+    elif params["optimizer"] == "adam":
+        optimizer = torch.optim.Adam(
+            network.parameters(), lr=params["adam_lr"], weight_decay=params["l2_regularization"]
+        )
+    elif params["optimizer"] == "rmsprop":
+        optimizer = torch.optim.RMSprop(
+            network.parameters(),
+            lr=params["rmsprop_lr"],
+            alpha=params["rmsprop_alpha"],
+            momentum=params["rmsprop_momentum"],
+        )
+
+    return optimizer
