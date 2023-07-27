@@ -19,7 +19,7 @@ def download_dataset():
     with open(os.path.join('./data', file_name), 'wb') as f:
         for chunk in get_response.iter_content(chunk_size=None):
             f.write(chunk)
-    print("Movie-lens dataset (ml-latest-small.zip) download completed.")
+    print("Movielens dataset (ml-latest-small.zip) download completed.")
 
     with zipfile.ZipFile(hparams.data_path, mode='r') as z:
         z.extractall(hparams.save_path)

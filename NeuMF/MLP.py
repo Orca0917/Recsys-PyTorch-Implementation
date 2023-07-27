@@ -1,8 +1,8 @@
 import torch
 
-from model.GMF import GMF
-from utils.engine import Engine
-from utils.util import use_cuda, resume_checkpoint
+from GMF import GMF
+from engine import Engine
+from util import use_cuda, resume_checkpoint
 
 
 class MLP(torch.nn.Module):
@@ -24,7 +24,7 @@ class MLP(torch.nn.Module):
         for idx, (in_size, out_size) in enumerate(zip(config["layers"][:-1], config["layers"][1:])):
             self.fc_layers.append(torch.nn.Linear(in_size, out_size))
 
-        self.affine_output = torch.nn.Linear(in_features=config["layers"][:-1], out_features=1)
+        self.affine_output = torch.nn.Linear(in_features=config["layers"][-1], out_features=1)
         self.logistic = torch.nn.Sigmoid()
 
     def forward(self, user_indices, item_indices):
