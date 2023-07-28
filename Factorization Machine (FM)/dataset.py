@@ -1,7 +1,9 @@
 import os
+import torch
 import hparams
 import zipfile
 import requests
+import numpy as np
 import pandas as pd
 
 from torch.utils.data import Dataset
@@ -30,19 +32,21 @@ def download_dataset():
 
 
 class FMDataset(Dataset):
-    def __init__(self, is_train: bool):
+    def __init__(self):
         super(FMDataset, self).__init__()
         download_dataset()
-        self.is_train = is_train
-        self.data = pd.read_csv(os.path.join(hparams.data_base_path, 'ratings.csv'))
+        self.data = pd.read_csv(os.path.join(hparams.data_base_path, 'ratings.csv')).to_numpy()[:, :3]
 
-        self.X = self.data.drop(['rating'])
-        self.y = self.data['rating']
+        self.input = self.data[:, :2]
+        self.target = self.data[:, 2]
+
+        self.num_feature = 2
+        self.field_dims = np.max(self.input, axis=0) + 1
 
     def __len__(self):
-        return len(self.X)
+        return len(self.input)
 
     def __getitem__(self, index):
-        return self.X.iloc[index], self.y.iloc[index]
+        return self.input[index], self.target[index]
 
 
