@@ -5,7 +5,6 @@
 <br/>
 
 ## 👋 Introduction
----
 
 Hello! The repository you are currently viewing is personally studying recommended system models
 using deep learning and storing code implemented using PyTorch. You can use it freely at any time,
@@ -15,7 +14,6 @@ please let me know through issue.
 <br/>
 
 ## 📑 Paper lists
----
 
 I show you a list of papers that I organized and implemented myself.
 Please note that we have referred to other implementation codes for some models,
