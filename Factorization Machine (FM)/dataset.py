@@ -11,6 +11,7 @@ from torch.utils.data import Dataset
 
 def download_dataset():
     if os.path.isdir(hparams.save_path):
+        print("Data already exists. Start training directly.")
         return
     else:
         os.mkdir(hparams.save_path)
@@ -31,6 +32,12 @@ def download_dataset():
     print("Removing zip file completed.")
 
 
+def to_implicit_feedback(target):
+    target[target <= 3.0] = 0
+    target[target > 3.0] = 1
+    return target
+
+
 class FMDataset(Dataset):
     def __init__(self):
         super(FMDataset, self).__init__()
@@ -38,7 +45,7 @@ class FMDataset(Dataset):
         self.data = pd.read_csv(os.path.join(hparams.data_base_path, 'ratings.csv')).to_numpy()[:, :3]
 
         self.input = self.data[:, :2]
-        self.target = self.data[:, 2]
+        self.target = to_implicit_feedback(self.data[:, 2])
 
         self.num_feature = 2
         self.field_dims = np.max(self.input, axis=0) + 1
@@ -48,5 +55,3 @@ class FMDataset(Dataset):
 
     def __getitem__(self, index):
         return self.input[index], self.target[index]
-
-
