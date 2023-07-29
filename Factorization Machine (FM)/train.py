@@ -8,13 +8,15 @@ from tqdm import tqdm
 from dataset import FMDataset
 from utils import plot_loss_graph
 from model import FactorizationMachine
+from sklearn.metrics import roc_auc_score
 from torch.utils.data import DataLoader
-from sklearn.model_selection import train_test_split
 
 
 # Prepare dataset
 dataset = FMDataset()
-train_dataset, test_dataset = train_test_split(dataset, train_size=0.8, random_state=42, shuffle=True)
+train_data_len = int(len(dataset) * 0.8)
+test_data_len = len(dataset) - train_data_len
+train_dataset, test_dataset = torch.utils.data.random_split(dataset, (train_data_len, test_data_len))
 train_dataloader = DataLoader(train_dataset, batch_size=hparams.batch_size, shuffle=True)
 test_dataloader = DataLoader(test_dataset, batch_size=hparams.batch_size, shuffle=False)
 
@@ -59,18 +61,21 @@ for epoch in range(hparams.num_epochs):
     model.eval()
     tqdm_test = tqdm(test_dataloader, total=len(test_dataloader), desc=f"Test Epoch #{epoch + 1}", file=sys.stdout)
     with torch.no_grad():
+        targets, predicts = [], []
         for X, y in tqdm_test:
             X = X.to(device)
 
             output = model(X).cpu()
             y = y.to(torch.float32)
-            loss = criterion(output, y)
 
-            epoch_test_loss += loss.item()
-            tqdm_test.set_postfix(BCE_loss=loss.item())
+            predicts.extend(output.tolist())
+            targets.extend(y.tolist())
 
-    epoch_test_loss_history.append(epoch_test_loss / len(test_dataloader))
-    print(f"Test Epoch #{epoch + 1} finished. Loss : {epoch_test_loss / len(test_dataloader): .4f}", flush=True)
+        score = roc_auc_score(targets, predicts)
+        tqdm_test.set_postfix(AUCROC=score)
+
+    epoch_test_loss_history.append(score)
+    print(f"Test Epoch #{epoch + 1} finished. AUCROC : {score: .4f}", flush=True)
 
 # plot loss graph
 plot_loss_graph(epoch_train_loss_history, epoch_test_loss_history)

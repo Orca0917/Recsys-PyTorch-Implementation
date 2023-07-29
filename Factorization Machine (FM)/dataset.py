@@ -33,8 +33,8 @@ def download_dataset():
 
 
 def to_implicit_feedback(target):
-    target[target <= 3.0] = 0
-    target[target > 3.0] = 1
+    target[target <= 3] = 0
+    target[target > 3] = 1
     return target
 
 
@@ -46,8 +46,6 @@ class FMDataset(Dataset):
 
         self.input = self.data[:, :2]
         self.target = to_implicit_feedback(self.data[:, 2])
-
-        self.num_feature = 2
         self.field_dims = np.max(self.input, axis=0) + 1
 
     def __len__(self):
