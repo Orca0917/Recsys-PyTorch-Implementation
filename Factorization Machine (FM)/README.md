@@ -20,4 +20,8 @@ python train.py
 
 <br/>
 
+## Result
+
+![Factorization Machine result](asset/FM%20result.png)
+
 *If there is a problem running, please let me know.*
