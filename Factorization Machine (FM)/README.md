@@ -6,8 +6,8 @@ Rendle, S. (2010, December). Factorization machines. In 2010 IEEE International 
 ## How to run?
 
 ```shell
-// installing packages (using conda)
-conda install --file packagelist.txt
+// installing packages
+pip install -r requirements.txt
 
 // run the file
 python train.py
