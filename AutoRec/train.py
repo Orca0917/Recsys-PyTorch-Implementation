@@ -14,11 +14,13 @@ train_dataset = AutoRecDataset()
 test_dataset = AutoRecDataset(is_train=False)
 
 # make dataloader
-train_dataloader = DataLoader(train_dataset, batch_size=hparams.batch_size, shuffle=True)
+train_dataloader = DataLoader(
+    train_dataset, batch_size=hparams.batch_size, shuffle=True
+)
 test_dataloader = DataLoader(test_dataset, batch_size=hparams.batch_size, shuffle=False)
 
 # model, optimizer definition
-model = AutoRec(input_dim=hparams.input_dim, hidden_dim=hparams.hidden_dim)
+model = AutoRec(input_dim=hparams.input_dim, hidden_dim=hparams.hidden_dim).cuda()
 optimizer = optim.Adam(model.parameters(), lr=hparams.learning_rate)
 criterion = nn.MSELoss()
 
@@ -29,6 +31,7 @@ for epoch in range(hparams.epoch):
 
     model.train()
     for input in tqdm(train_dataloader):
+        input = input.cuda()
         pred = model(input)
         loss = criterion(pred, input)
 
@@ -41,6 +44,7 @@ for epoch in range(hparams.epoch):
     model.eval()
     with torch.no_grad():
         for input in tqdm(test_dataloader):
+            input = input.cuda()
             pred = model(input)
             loss = criterion(pred, input)
 
@@ -48,3 +52,7 @@ for epoch in range(hparams.epoch):
 
     avg_train_loss = train_epoch_loss / len(train_dataloader)
     avg_test_loss = test_epoch_loss / len(test_dataloader)
+
+    print("-" * 10)
+    print(f"Train loss : {avg_train_loss: .3f}")
+    print(f"Test loss : {avg_test_loss: .3f}\n")
