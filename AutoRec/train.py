@@ -3,7 +3,6 @@ import hparams
 import torch.nn as nn
 import torch.optim as optim
 
-from tqdm import tqdm
 from model import AutoRec
 from dataset import AutoRecDataset
 from torch.utils.data import DataLoader
@@ -29,30 +28,49 @@ for epoch in range(hparams.epoch):
     train_epoch_loss = 0
     test_epoch_loss = 0
 
+    # train
     model.train()
-    for input in tqdm(train_dataloader):
-        input = input.cuda()
-        pred = model(input)
-        loss = criterion(pred, input)
+    for train_input in train_dataloader:
+        # training with gpu
+        train_input = train_input.cuda()
 
+        # make prediction
+        pred = model(train_input)
+
+        # training only with observed data
+        mask = train_input > 0
+        loss = torch.sqrt(criterion(pred * mask, train_input * mask))
+
+        # model optimization
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
+        # loss update
         train_epoch_loss += loss
 
+    # test
     model.eval()
     with torch.no_grad():
-        for input in tqdm(test_dataloader):
-            input = input.cuda()
-            pred = model(input)
-            loss = criterion(pred, input)
+        for test_input in test_dataloader:
+            # testing with gpu
+            test_input = test_input.cuda()
 
+            # make prediction
+            pred = model(test_input)
+
+            # testing only with observed data
+            mask = test_input > 0
+            loss = torch.sqrt(criterion(pred * mask, test_input * mask))
+
+            # loss update
             test_epoch_loss += loss
 
+    # calculate average loss
     avg_train_loss = train_epoch_loss / len(train_dataloader)
     avg_test_loss = test_epoch_loss / len(test_dataloader)
 
     print("-" * 10)
+    print(f"Epoch #{epoch}")
     print(f"Train loss : {avg_train_loss: .3f}")
     print(f"Test loss : {avg_test_loss: .3f}\n")
