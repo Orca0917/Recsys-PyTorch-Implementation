@@ -22,10 +22,11 @@ The contents of the thesis are being organized on the blog and are being organiz
 For more information, visit my blog as well!
 
 
-|Index|Year|Model|Paper Link|                   Blog Link                    |             Implementation             |
-|:---:|:---:|:---:|:---:|:----------------------------------------------:|:--------------------------------------:|
-|1|2017|NeuMF|[Paper](https://dl.acm.org/doi/abs/10.1145/3038912.3052569?casa_token=0Mn-nBbA8DkAAAAA:1GLqj8Yb63TLSKBwCvl9NNzpQLOWO7mgBto24pPGMd9rlDU9Mic5fZm73VcxBZy6tCxzWN_odg)| [Blog](https://killerwhale0917.tistory.com/33) |            [Code](./NeuMF)             |
-|2|2010|FM|[Paper](https://ieeexplore.ieee.org/abstract/document/5694074?casa_token=y8NcEPGtCNkAAAAA:TwepAyJVyImsVxxx6N-AmT-V5auhy9mdegF2bN9LkSiStis3k01Kc_EEdHPLvp8CTS1AA1nfEg)| [Blog](https://killerwhale0917.tistory.com/40) | [Code](./Factorization%20Machine%20(FM)) |
+| Index | Year |  Model  |                                                                              Paper Link                                                                               |                   Blog Link                    |              Implementation              |
+|:-----:|:----:|:-------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------:|:----------------------------------------:|
+|   1   | 2017 |  NeuMF  |  [Paper](https://dl.acm.org/doi/abs/10.1145/3038912.3052569?casa_token=0Mn-nBbA8DkAAAAA:1GLqj8Yb63TLSKBwCvl9NNzpQLOWO7mgBto24pPGMd9rlDU9Mic5fZm73VcxBZy6tCxzWN_odg)   | [Blog](https://killerwhale0917.tistory.com/33) |             [Code](./NeuMF)              |
+|   2   | 2010 |   FM    | [Paper](https://ieeexplore.ieee.org/abstract/document/5694074?casa_token=y8NcEPGtCNkAAAAA:TwepAyJVyImsVxxx6N-AmT-V5auhy9mdegF2bN9LkSiStis3k01Kc_EEdHPLvp8CTS1AA1nfEg) | [Blog](https://killerwhale0917.tistory.com/40) | [Code](./Factorization%20Machine%20(FM)) |
+|   3   | 2015 | AutoRec |                                                   [Paper](https://users.cecs.anu.edu.au/~u5098633/papers/www15.pdf)                                                   |                   [Blog](#)                    |            [Code](./AutoRec)             |
 
 
 <br/>
